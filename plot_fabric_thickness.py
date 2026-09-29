@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-"""Fabric thickness figure (mean ± SD)."""
+"""Fabric thickness figure (mean ± SD).
+Reads FIJI Results CSVs from Lab2Figi/thickness/.
+"""
 
 from pathlib import Path
+import csv
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
+DATA = HERE / "Lab2Figi" / "thickness"
+
+FILES = {
+    "A": DATA / "a-Results-x100.csv",
+    "B": DATA / "b-Results-x100.csv",
+    "C": DATA / "c-Results-x100.csv",
+}
+
 matplotlib.rcParams.update({
     "font.family": "DejaVu Sans",
     "font.size": 10,
@@ -21,9 +32,21 @@ matplotlib.rcParams.update({
     "pdf.fonttype": 42,
 })
 
-A = np.array([67.465, 73.176, 69.200])
-B = np.array([64.516, 69.387, 69.543])
-C = np.array([78.457, 72.237, 70.352])
+
+def load_length(path):
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Missing {path}. Run this script from the repo root.")
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        rows = list(csv.reader(f))
+    header = [h.strip() for h in rows[0]]
+    col = header.index("Length")
+    return np.array([float(r[col]) for r in rows[1:] if r and r[col].strip()])
+
+
+A = load_length(FILES["A"])
+B = load_length(FILES["B"])
+C = load_length(FILES["C"])
 means = [A.mean(), B.mean(), C.mean()]
 sds = [A.std(ddof=1), B.std(ddof=1), C.std(ddof=1)]
 

@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
 """
 Fiber diameter figure (mean ± SD + histogram).
-Output: Figure_diameter_journal.png / .pdf in the same folder.
-
-Requires: matplotlib, numpy
+Reads FIJI Results CSVs from Lab2Figi/diameter/.
+Output: Figure_diameter_journal.png / .pdf next to this script.
 """
 
 from pathlib import Path
+import csv
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
+DATA = HERE / "Lab2Figi" / "diameter"
+
+FILES = {
+    "A": DATA / "a-Results-1000x.csv",
+    "B": DATA / "b-Results-1000x.csv",
+    "C": DATA / "c-Results-1000x.csv",
+}
 
 matplotlib.rcParams.update({
     "font.family": "DejaVu Sans",
@@ -32,19 +39,21 @@ matplotlib.rcParams.update({
     "pdf.fonttype": 42,
 })
 
-# Length column from FIJI, 1000x images (µm). 20 fibers per image.
-A = np.array([
-    0.76, 1.26, 0.612, 0.679, 0.39, 0.589, 0.315, 1.164, 0.383, 0.871,
-    1.228, 0.428, 0.464, 1.231, 0.745, 0.92, 0.406, 0.499, 1.252, 0.341,
-])
-B = np.array([
-    0.805, 0.977, 0.905, 0.944, 0.48, 0.467, 0.71, 0.874, 0.765, 1.008,
-    0.722, 0.749, 0.782, 0.436, 0.45, 0.645, 1.052, 1.114, 0.47, 0.585,
-])
-C = np.array([
-    0.905, 0.255, 0.651, 0.337, 0.674, 0.382, 0.618, 0.604, 0.744, 0.235,
-    0.302, 0.337, 0.375, 0.242, 0.52, 0.45, 0.954, 0.577, 0.645, 0.375,
-])
+
+def load_length(path):
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Missing {path}. Run this script from the repo root.")
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        rows = list(csv.reader(f))
+    header = [h.strip() for h in rows[0]]
+    col = header.index("Length")
+    return np.array([float(r[col]) for r in rows[1:] if r and r[col].strip()])
+
+
+A = load_length(FILES["A"])
+B = load_length(FILES["B"])
+C = load_length(FILES["C"])
 allv = np.concatenate([A, B, C])
 
 means = [A.mean(), B.mean(), C.mean()]

@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
 """
 Fiber orientation figure.
-Panel a: overlaid Directionality histograms (Fourier, 2 deg bins).
-Panel b: fitted main angle ± dispersion.
-
-Looks for histA.dat, histB.dat, histC.dat in the same folder
-(tab-separated: angle_deg, amount, fit). If they are missing,
-the script still draws panel b from the official FIJI fit values.
-
+Panel a: Directionality histograms from Lab2Figi/orientation CSVs.
+Panel b: official FIJI Gaussian-fit main angle ± dispersion (report Table 3).
 Output: Figure_orientation_journal.png / .pdf
 """
 
 from pathlib import Path
+import csv
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
+DATA = HERE / "Lab2Figi" / "orientation"
+
+FILES = {
+    "A": DATA / "a-Directionality-500x.csv",
+    "B": DATA / "b-directionality-x500.csv",
+    "C": DATA / "c-directionality-x500.csv",
+}
 
 matplotlib.rcParams.update({
     "font.family": "DejaVu Sans",
@@ -37,30 +40,28 @@ matplotlib.rcParams.update({
     "pdf.fonttype": 42,
 })
 
-# Official FIJI Directionality Gaussian-fit summary
-CENTERS = np.array([-7.50, -1.99, -10.50])  # deg
-DISPS   = np.array([16.71, 23.72, 19.17])   # deg
-LABELS  = ["A", "B", "C"]
+# Official FIJI Directionality Gaussian-fit summary (Table 3)
+CENTERS = np.array([-7.50, -1.99, -10.50])
+DISPS = np.array([16.71, 23.72, 19.17])
+LABELS = ["A", "B", "C"]
 
 
-def load_hist(path):
+def load_dir_csv(path):
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Missing {path}. Run this script from the repo root.")
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        rows = list(csv.reader(f))
     ang, amt, fit = [], [], []
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            parts = line.replace(",", " ").split()
-            a, b, c = map(float, parts[:3])
-            ang.append(a); amt.append(b); fit.append(c)
+    for r in rows[1:]:
+        if len(r) >= 3 and r[0].strip():
+            ang.append(float(r[0]))
+            amt.append(float(r[1]))
+            fit.append(float(r[2]))
     return np.array(ang), np.array(amt), np.array(fit)
 
 
-hists = {}
-for key, name in zip(LABELS, ["histA.dat", "histB.dat", "histC.dat"]):
-    p = HERE / name
-    if p.exists():
-        hists[key] = load_hist(p)
+hists = {key: load_dir_csv(FILES[key]) for key in LABELS}
 
 fig, axes = plt.subplots(
     1, 2, figsize=(7.5, 3.25),
@@ -69,13 +70,10 @@ fig, axes = plt.subplots(
 
 ax = axes[0]
 styles = {"A": ("-", 1.15), "B": ("--", 1.15), "C": (":", 1.15)}
-if hists:
-    for key in LABELS:
-        ang, amt, _fit = hists[key]
-        ls, lw = styles[key]
-        ax.plot(ang, amt, color="black", lw=lw, ls=ls, label=key)
-else:
-    ax.text(0.5, 0.5, "histA/B/C.dat not found", ha="center", transform=ax.transAxes)
+for key in LABELS:
+    ang, amt, _fit = hists[key]
+    ls, lw = styles[key]
+    ax.plot(ang, amt, color="black", lw=lw, ls=ls, label=key)
 
 ax.axvline(0, color="black", lw=0.7)
 ax.set_xlim(-90, 90)
