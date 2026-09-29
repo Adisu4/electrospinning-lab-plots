@@ -1,34 +1,23 @@
 # Electrospinning lab plots
 
-Python scripts used to make the journal-style figures for the BMCH combined electrospinning and SEM lab report.
+Python scripts and FIJI data for the BMCH electrospinning / SEM lab report.
 
-All scripts read the FIJI export files in `Lab2Figi/` and write PNG/PDF figures next to the script. Clone the repo and run from the repository root. No local `C:\\` paths are required.
-
-## Data layout
+## Folder plan
 
 ```
-Lab2Figi/
+Lab2Figi/              raw FIJI exports only (CSV + original screenshots)
   diameter/
-    a-Results-1000x.csv
-    b-Results-1000x.csv
-    c-Results-1000x.csv
   orientation/
-    a-Directionality-500x.csv
-    b-directionality-x500.csv
-    c-directionality-x500.csv
   thickness/
-    a-Results-x100.csv
-    b-Results-x100.csv
-    c-Results-x100.csv
+figures/
+  python/              plots made by the scripts (use these in the report)
+  fiji/                FIJI histogram / SEM screenshots, if you want them separate
+plot_*.py              run from this folder
 ```
 
-Diameter and thickness plots use the FIJI `Length` column (µm). Orientation plots use the Directionality histogram CSVs.
+Keep measurement tables in `Lab2Figi/`. Keep finished report figures in `figures/python/`.
 
 ## Requirements
-
-- Python 3
-- matplotlib
-- numpy
 
 ```bash
 pip install matplotlib numpy
@@ -44,10 +33,8 @@ python3 plot_fiber_orientation.py
 python3 plot_fabric_thickness.py
 ```
 
-Each script writes a PNG and a PDF in this folder.
+Outputs:
 
-## Scripts
-
-- `plot_fiber_diameter.py` — mean ± SD bars and pooled histogram from `Lab2Figi/diameter/` (20 fibers per 1000× image).
-- `plot_fiber_orientation.py` — Directionality histograms from `Lab2Figi/orientation/` plus the FIJI Gaussian-fit main angle ± dispersion.
-- `plot_fabric_thickness.py` — mean ± SD bars from `Lab2Figi/thickness/` (3 measurements per 100× image).
+- `figures/python/Figure_diameter_journal.png` (and `.pdf`)
+- `figures/python/Figure_orientation_journal.png` (and `.pdf`)
+- `figures/python/Figure_thickness_journal.png` (and `.pdf`)

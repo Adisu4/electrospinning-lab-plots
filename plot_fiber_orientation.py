@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
 Fiber orientation figure.
-Panel a: Directionality histograms from Lab2Figi/orientation CSVs.
-Panel b: official FIJI Gaussian-fit main angle ± dispersion (report Table 3).
-Output: Figure_orientation_journal.png / .pdf
+Reads Directionality CSVs from Lab2Figi/orientation/.
+Writes figures/python/Figure_orientation_journal.png and .pdf.
 """
 
 from pathlib import Path
@@ -14,6 +13,8 @@ import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "Lab2Figi" / "orientation"
+OUT = HERE / "figures" / "python"
+OUT.mkdir(parents=True, exist_ok=True)
 
 FILES = {
     "A": DATA / "a-Directionality-500x.csv",
@@ -40,7 +41,6 @@ matplotlib.rcParams.update({
     "pdf.fonttype": 42,
 })
 
-# Official FIJI Directionality Gaussian-fit summary (Table 3)
 CENTERS = np.array([-7.50, -1.99, -10.50])
 DISPS = np.array([16.71, 23.72, 19.17])
 LABELS = ["A", "B", "C"]
@@ -112,8 +112,8 @@ for i, (c, d) in enumerate(zip(CENTERS, DISPS)):
     ax.text(i, c - d - 3.2, f"{c:.1f} ± {d:.1f}", ha="center", va="top", fontsize=7.5)
 ax.text(-0.6, 20, "b", fontsize=13, fontweight="bold", va="bottom", ha="right")
 
-fig.savefig(HERE / "Figure_orientation_journal.png")
-fig.savefig(HERE / "Figure_orientation_journal.pdf")
-print("wrote", HERE / "Figure_orientation_journal.png")
+fig.savefig(OUT / "Figure_orientation_journal.png")
+fig.savefig(OUT / "Figure_orientation_journal.pdf")
+print("wrote", OUT / "Figure_orientation_journal.png")
 print("combined angle ± disp = "
       f"{CENTERS.mean():.1f} ± {DISPS.mean():.1f} deg")

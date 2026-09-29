@@ -2,7 +2,7 @@
 """
 Fiber diameter figure (mean ± SD + histogram).
 Reads FIJI Results CSVs from Lab2Figi/diameter/.
-Output: Figure_diameter_journal.png / .pdf next to this script.
+Writes figures/python/Figure_diameter_journal.png and .pdf.
 """
 
 from pathlib import Path
@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "Lab2Figi" / "diameter"
+OUT = HERE / "figures" / "python"
+OUT.mkdir(parents=True, exist_ok=True)
 
 FILES = {
     "A": DATA / "a-Results-1000x.csv",
@@ -94,7 +96,7 @@ for spine in ("top", "right"):
 ax.text(allv.mean() + 0.04, 16.4, f"mean = {allv.mean():.2f} µm", fontsize=8)
 ax.text(0.15, 18, "b", fontsize=13, fontweight="bold", va="bottom", ha="right")
 
-fig.savefig(HERE / "Figure_diameter_journal.png")
-fig.savefig(HERE / "Figure_diameter_journal.pdf")
-print("wrote", HERE / "Figure_diameter_journal.png")
+fig.savefig(OUT / "Figure_diameter_journal.png")
+fig.savefig(OUT / "Figure_diameter_journal.pdf")
+print("wrote", OUT / "Figure_diameter_journal.png")
 print(f"combined mean ± SD = {allv.mean():.2f} ± {allv.std(ddof=1):.2f} µm  n={len(allv)}")

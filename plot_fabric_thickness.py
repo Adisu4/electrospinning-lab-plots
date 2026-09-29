@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fabric thickness figure (mean ± SD).
 Reads FIJI Results CSVs from Lab2Figi/thickness/.
+Writes figures/python/Figure_thickness_journal.png and .pdf.
 """
 
 from pathlib import Path
@@ -11,6 +12,8 @@ import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "Lab2Figi" / "thickness"
+OUT = HERE / "figures" / "python"
+OUT.mkdir(parents=True, exist_ok=True)
 
 FILES = {
     "A": DATA / "a-Results-x100.csv",
@@ -69,7 +72,8 @@ for spine in ("top", "right"):
 for i, (m, s) in enumerate(zip(means, sds)):
     ax.text(i, m + s + 2.2, f"{m:.1f} ± {s:.1f}", ha="center", va="bottom", fontsize=8)
 
-fig.savefig(HERE / "Figure_thickness_journal.png")
-fig.savefig(HERE / "Figure_thickness_journal.pdf")
+fig.savefig(OUT / "Figure_thickness_journal.png")
+fig.savefig(OUT / "Figure_thickness_journal.pdf")
 allv = np.concatenate([A, B, C])
 print(f"combined {allv.mean():.1f} ± {allv.std(ddof=1):.1f} µm  n={len(allv)}")
+print("wrote", OUT / "Figure_thickness_journal.png")
