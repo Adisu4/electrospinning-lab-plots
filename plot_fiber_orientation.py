@@ -50,7 +50,7 @@ def load_dir_csv(path):
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"Missing {path}. Run this script from the repo root.")
-    with path.open(newline="", encoding="utf-8-sig") as f:
+    with path.open(newline="", encoding="latin-1") as f:
         rows = list(csv.reader(f))
     ang, amt, fit = [], [], []
     for r in rows[1:]:

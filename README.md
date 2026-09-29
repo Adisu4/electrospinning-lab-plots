@@ -1,29 +1,33 @@
-# Electrospinning lab plots
+# Electrospinning and SEM analysis plots
 
-Python scripts and FIJI data for the BMCH electrospinning / SEM lab report.
+Scripts and data used to generate the fiber-diameter, orientation, and thickness figures in the BMCH 8220/9221 lab report.
 
-## Folder plan
+**Repository:** https://github.com/Adisu4/electrospinning-lab-plots
 
-```
-Lab2Figi/              raw FIJI exports only (CSV + original screenshots)
-  diameter/
-  orientation/
-  thickness/
-figures/
-  python/              plots made by the scripts (use these in the report)
-  fiji/                FIJI histogram / SEM screenshots, if you want them separate
-plot_*.py              run from this folder
-```
+## Contents
 
-Keep measurement tables in `Lab2Figi/`. Keep finished report figures in `figures/python/`.
+| Path | Description |
+|---|---|
+| `Lab2Figi/diameter/` | FIJI Results tables (1000× fiber diameter, µm) |
+| `Lab2Figi/orientation/` | FIJI Directionality histograms (500×) |
+| `Lab2Figi/thickness/` | FIJI Results tables (100× wall thickness, µm) |
+| `figures/fiji/` | SEM frames and FIJI histogram screenshots |
+| `figures/python/` | Journal figures written by the plotting scripts |
+| `plot_fiber_diameter.py` | Diameter mean ± SD and pooled histogram |
+| `plot_fiber_orientation.py` | Directionality overlay and fitted main angle |
+| `plot_fabric_thickness.py` | Thickness mean ± SD |
+
+Measurements were taken in FIJI/ImageJ. Python is used only to plot those exports.
 
 ## Requirements
+
+Python 3 with `matplotlib` and `numpy`.
 
 ```bash
 pip install matplotlib numpy
 ```
 
-## Run
+## Reproduce the figures
 
 ```bash
 git clone https://github.com/Adisu4/electrospinning-lab-plots.git
@@ -33,8 +37,14 @@ python3 plot_fiber_orientation.py
 python3 plot_fabric_thickness.py
 ```
 
-Outputs:
+The scripts read CSVs from `Lab2Figi/` and write:
 
-- `figures/python/Figure_diameter_journal.png` (and `.pdf`)
-- `figures/python/Figure_orientation_journal.png` (and `.pdf`)
-- `figures/python/Figure_thickness_journal.png` (and `.pdf`)
+- `figures/python/Figure_diameter_journal.png`
+- `figures/python/Figure_orientation_journal.png`
+- `figures/python/Figure_thickness_journal.png`
+
+PDF copies are written next to the PNGs.
+
+## Figures
+
+FIJI source images are in [`figures/fiji/`](figures/fiji/). After running the scripts, report-ready plots are in [`figures/python/`](figures/python/).
