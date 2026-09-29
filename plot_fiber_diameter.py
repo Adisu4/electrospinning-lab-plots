@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Journal-style fiber diameter figure (mean ± SD + histogram).
+Fiber diameter figure (mean ± SD + histogram).
 Output: Figure_diameter_journal.png / .pdf in the same folder.
 
 Requires: matplotlib, numpy

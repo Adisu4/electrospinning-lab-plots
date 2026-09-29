@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Journal-style fabric thickness figure (mean ± SD)."""
+"""Fabric thickness figure (mean ± SD)."""
 
 from pathlib import Path
 import numpy as np

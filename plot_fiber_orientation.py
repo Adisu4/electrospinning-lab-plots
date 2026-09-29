@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Journal-style fiber orientation figure.
+Fiber orientation figure.
 Panel a: overlaid Directionality histograms (Fourier, 2 deg bins).
 Panel b: fitted main angle ± dispersion.
 
